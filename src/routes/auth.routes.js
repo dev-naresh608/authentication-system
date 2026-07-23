@@ -1,15 +1,26 @@
 import { Router } from "express";
 import * as authController from "../controllers/auth.controller.js"
-const authRoute = Router();
+const authRouter = Router();
 
 
 // POST : /api/auth/register 
-authRoute.post('/register',authController.handleRegister);
+authRouter.post('/register',authController.register);
+
+// GET : /api/auth/login
+authRouter.post('/login',authController.login);
 
 // GET : /api/auth/get-me 
-authRoute.get('/get-me',authController.handleGetMe);  
+authRouter.get('/get-me',authController.getMe);  
 
 // GET : /api/auth/refresh-token
-authRoute.get('/refresh-token',authController.handleRefreshToken);
+authRouter.get('/refresh-token',authController.refreshToken);
 
-export default authRoute;
+// GET : /api/auth/logout
+authRouter.get('/logout',authController.logout);
+
+// GET : /api/auth/logout-all
+authRouter.get('/logout-all',authController.logoutAll);
+
+
+
+export default authRouter;
