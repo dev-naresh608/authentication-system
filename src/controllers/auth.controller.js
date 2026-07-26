@@ -231,7 +231,7 @@ export async function logout(req, res) {
   if (!refreshToken) {
     return res.status(400).json({
       message: "Refresh Token not found",
-    });
+    })
   }
 
   const refreshTokenHash = crypto
