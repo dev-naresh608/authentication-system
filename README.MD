@@ -1,48 +1,45 @@
-# 🔐 JWT Authentication with Access & Refresh Tokens
+# 🔐 Authentication System
 
-A backend authentication system built with **Node.js**, **Express.js**, **MongoDB**, and **JWT**.
+A complete backend authentication system built with **Node.js**, **Express.js**, **MongoDB**, and **JWT** following the **MVC Architecture**.
 
-This project demonstrates how modern authentication works using:
-
-- JWT Access Tokens
-- JWT Refresh Tokens
-- HTTP-only Cookies
-- Password Hashing
-- Protected Routes
-- MongoDB User Authentication
+This project demonstrates a production-style authentication workflow including email verification, session management, JWT authentication, refresh tokens, secure cookies, and device logout functionality.
 
 ---
 
-# 🚀 Features
+## ✨ Features
 
-✅ User Registration
-
-✅ Password Hashing (SHA-256)
-
-✅ JWT Access Token
-
-✅ JWT Refresh Token
-
-✅ HTTP-only Secure Cookie
-
-✅ Protected API
-
-✅ Refresh Access Token
-
-✅ MongoDB Database
+- 👤 User Registration
+- 🔑 User Login
+- ✉️ Email OTP Verification
+- 🔐 JWT Authentication
+- ♻️ Access Token & Refresh Token
+- 🍪 HTTP-only Secure Cookies
+- 📧 Gmail OAuth2 Email Service (Nodemailer)
+- 🗂 Session Management
+- 🔒 Refresh Token Hashing
+- 🚪 Logout Current Device
+- 🌍 Logout From All Devices
+- 🛡 Protected Routes
+- 🏗 MVC Folder Structure
+- ⚙ Environment Variable Validation
 
 ---
 
 # 🛠 Tech Stack
 
-- Node.js
-- Express.js
-- MongoDB
-- Mongoose
-- JSON Web Token (JWT)
-- Cookie Parser
-- Crypto
-- dotenv
+| Technology | Purpose |
+|------------|---------|
+| Node.js | Runtime |
+| Express.js | Backend Framework |
+| MongoDB | Database |
+| Mongoose | ODM |
+| JWT | Authentication |
+| Nodemailer | Email Service |
+| Gmail OAuth2 | Email Authentication |
+| Cookie Parser | Cookie Handling |
+| Crypto | Password & Token Hashing |
+| Dotenv | Environment Variables |
+| Morgan | Logging |
 
 ---
 
@@ -52,16 +49,25 @@ This project demonstrates how modern authentication works using:
 src
 │
 ├── config
-│   └── config.js
+│   ├── config.js
+│   └── db.js
 │
 ├── controllers
 │   └── auth.controller.js
 │
 ├── models
-│   └── user.model.js
+│   ├── user.model.js
+│   ├── session.model.js
+│   └── otp.model.js
 │
 ├── routes
 │   └── auth.routes.js
+│
+├── services
+│   └── email.service.js
+│
+├── utils
+│   └── utils.js
 │
 ├── app.js
 └── server.js
@@ -69,44 +75,65 @@ src
 
 ---
 
-# Authentication Flow
+# 🔄 Authentication Flow
 
 ```
           Register
               │
               ▼
-      Hash Password
+     Hash Password
               │
               ▼
-      Save User in MongoDB
+      Store User
               │
               ▼
- Generate Access Token (15 min)
+ Generate 6 Digit OTP
               │
               ▼
-Generate Refresh Token (7 Days)
+ Hash OTP & Save
               │
               ▼
-Store Refresh Token in HTTP-only Cookie
+ Send OTP Email
               │
               ▼
- Return Access Token to Client
+ Verify Email
+              │
+              ▼
+ Login
+              │
+              ▼
+ Generate Access Token
+              │
+              ▼
+ Generate Refresh Token
+              │
+              ▼
+ Store Refresh Token Hash
+              │
+              ▼
+ Create User Session
+              │
+              ▼
+ Set HTTP-only Cookie
+              │
+              ▼
+ Protected APIs
 ```
 
 ---
 
-# Access Token
+# 🔑 Authentication Tokens
 
-- Used for authenticated requests.
-- Sent in Authorization Header.
+## Access Token
 
-Example
+- Used for protected APIs
+- Sent using Authorization Header
 
 ```
 Authorization: Bearer ACCESS_TOKEN
 ```
 
-Expiry:
+Expiry
 
 ```
 15 Minutes
@@ -114,17 +141,17 @@ Expiry:
 
 ---
 
-# Refresh Token
+## Refresh Token
 
-Stored securely inside an HTTP-only Cookie.
+Stored securely as an HTTP-only cookie.
 
-Purpose:
+Used for
 
-- Generate a new Access Token
-- Keeps user logged in
-- Prevents frequent login
+- Creating new access tokens
+- Maintaining user sessions
+- Device authentication
 
-Expiry:
+Expiry
 
 ```
 7 Days
@@ -132,100 +159,32 @@ Expiry:
 
 ---
 
-# API Endpoints
+# 📮 API Endpoints
 
-## Register User
-
-```
-POST /api/auth/register
-```
-
-Body
-
-```json
-{
-    "username":"test",
-    "email":"test@gmail.com",
-    "password":"123456"
-}
-```
-
-Response
-
-```json
-{
-    "message":"User registered successfully",
-    "user":{
-        "username":"test",
-        "email":"test@gmail.com"
-    },
-    "accessToken":"..."
-}
-```
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/register` | Register new user |
+| POST | `/api/auth/login` | Login user |
+| GET | `/api/auth/get-me` | Get authenticated user |
+| GET | `/api/auth/refresh-token` | Generate new access token |
+| GET | `/api/auth/logout` | Logout current device |
+| GET | `/api/auth/logout-all` | Logout from all devices |
+| GET | `/api/auth/verify-email` | Verify email using OTP |
 
 ---
 
-## Get Current User
-
-```
-GET /api/auth/get-me
-```
-
-Headers
-
-```
-Authorization: Bearer ACCESS_TOKEN
-```
-
-Response
-
-```json
-{
-    "message":"user fetched successfully",
-    "user":{
-        "username":"test",
-        "email":"test@gmail.com"
-    }
-}
-```
-
----
-
-## Refresh Access Token
-
-```
-GET /api/auth/refresh-token
-```
-
-Requires
-
-```
-HTTP-only Refresh Token Cookie
-```
-
-Response
-
-```json
-{
-    "message":"Access token refreshed successfully",
-    "accessToken":"..."
-}
-```
-
----
-
-# Installation
+# 🚀 Getting Started
 
 Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
+git clone https://github.com/dev-naresh608/authentication-system.git
 ```
 
-Go inside the project
+Move into the project
 
 ```bash
-cd YOUR_REPOSITORY
+cd authentication-system
 ```
 
 Install dependencies
@@ -234,78 +193,99 @@ Install dependencies
 npm install
 ```
 
-Create a `.env` file
+Create a `.env`
 
 ```env
 PORT=5000
 
-MONGODB_URI=your_mongodb_connection
+MONGO_URI=
 
-JWT_SECRET=your_secret_key
+JWT_SECRET=
+
+GOOGLE_USER=
+
+GOOGE_CLIENT_ID=
+
+GOOGLE_CLIENT_SECRET=
+
+GOOGLE_REFRESH_TOKEN=
 ```
 
-Run the project
+Run the server
 
 ```bash
-npm run dev
+npm start
 ```
 
 ---
 
-# Security Notes
+# 🔒 Security Features
 
-Current implementation includes:
-
-- Password hashing
-- JWT Authentication
-- HTTP-only Cookies
-- Protected Routes
-
-Production improvements that can be added:
-
-- bcrypt instead of SHA-256
-- Refresh Token Rotation
-- Email Verification
-- Password Reset
-- Rate Limiting
-- CSRF Protection
-- Input Validation
-- Helmet
-- CORS Configuration
-- Logout with Token Invalidation
-
----
-
-# Learning Outcomes
-
-Through this project, I learned:
-
-- How JWT Authentication works
-- Difference between Access Token and Refresh Token
 - Password Hashing
+- JWT Authentication
+- Refresh Token Hashing
 - HTTP-only Cookies
-- Protected Routes
-- Authentication Middleware
-- Token Expiration
-- User Authentication Flow
-- MongoDB User Management
-
----
-
-# Future Improvements
-
-- Login API
-- Logout API
-- Role-Based Authentication
 - Email Verification
-- Forgot Password
-- Reset Password
-- Refresh Token Rotation
-- OAuth (Google Login)
-- Redis Token Blacklisting
+- Session Tracking
+- Environment Validation
 
 ---
 
-# License
+# 📚 Learning Outcomes
 
-This project is created for learning purposes.
+During this project, I learned about
+
+- JWT Authentication
+- Access & Refresh Tokens
+- Email OTP Verification
+- Nodemailer with Gmail OAuth2
+- Session Management
+- Secure Cookies
+- MongoDB Relationships
+- MVC Architecture
+- Authentication Flow Design
+- Token-Based Authentication
+- Environment Configuration
+
+---
+
+# 🚀 Future Improvements
+
+- bcrypt Password Hashing
+- Refresh Token Rotation
+- Password Reset via Email
+- Role-Based Authorization
+- Authentication Middleware
+- Rate Limiting
+- Zod Validation
+- Helmet Security
+- Redis Session Store
+- Docker Support
+- Swagger Documentation
+- Unit Testing
+
+---
+
+# 🙏 Acknowledgements
+
+This project was built while learning backend authentication concepts.
+
+**Learning Resource:** ❤️ **Sheryians Coding School**
+
+Special thanks to the instructors for explaining authentication, JWT, email verification, and backend architecture in a practical way.
+
+---
+
+# 📄 License
+
+This project is intended for educational and learning purposes.
+
+---
+
+<div align="center">
+
+### ⭐ If you found this project useful, consider giving it a star!
+
+Made with ❤️ by **Naresh Chaudhary**
+
+</div>
